@@ -13,16 +13,14 @@
             </tr>
         </thead>
 
-        {% for melon in num %}
-        <!--(2, [<Melon: 2, Crenshaw, $2.00>, 1]),
-            (14, [<Melon: 14, Ali Baba Watermelon, $2.50>, 2]), 
-            (23, [<Melon: 23, Congo Watermelon, $2.00>, 7])
-        -->
+        {% for melon_id in outer_dictionary %}
+        
+
             <tr>
-                <td>{{ melon[1][0].common_name }}</td>
-                <td>{{ melon[1][1] }}</td>
-                <td>${{ melon[1][0].price }}</td>
-                <td>${{ melon[1][1] * melon[1][0].price }}</td>
+                <td>{{ outer_dictionary[melon_id]['name'] }}</td>
+                <td>{{ outer_dictionary[melon_id]['qty'] }}</td>
+                <td>${{ outer_dictionary[melon_id]['price'] }}</td>
+                <td>${{ outer_dictionary[melon_id]['total'] }}</td>
             </tr> 
 
         {% endfor %}

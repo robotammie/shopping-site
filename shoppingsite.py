@@ -76,24 +76,40 @@ def shopping_cart():
 
     # raise Exception("before list")
 
+    
+    # TODO: what if there's no cart in session????
     cart = session['cart']
 
-    num_wanted = {}
+    outer_dictionary = {}
 
     # raise Exception("before for loop")
 
-    for melon_id in cart:
-        num_wanted[melon_id] = num_wanted.get(melon_id, [melons.get_by_id(melon_id),
-                                                         0])
-        num_wanted[melon_id][1] += 1
+    # cart = [14, 14, 23, 14, 2]
 
-    num=num_wanted.items()
+    for melon_id in cart:
+        outer_dictionary[melon_id] = {}
+        melon = melons.get_by_id(melon_id)
+
+        outer_dictionary[melon_id]['name'] = melon.common_name
+        outer_dictionary[melon_id]['price'] = melon.price
+        outer_dictionary[melon_id]['qty'] = cart.count(melon_id)
+        outer_dictionary[melon_id]['total'] = outer_dictionary[melon_id]['qty'] * outer_dictionary[melon_id]['price']
+
+    return render_template("cart.html",
+                           outer_dictionary=outer_dictionary)
+
+    # for melon_id in cart:
+    #     outer_dictionary[melon_id] = outer_dictionary.get(melon_id, [melons.get_by_id(melon_id),
+    #                                                      0])
+    #     outer_dictionary[melon_id][1] += 1
+
+    # num=outer_dictionary.items()
 
     # raise Exception("What are you passing to Cart?")
 
-    return render_template("cart.html", 
-                            num=num
-                            )
+    # return render_template("cart.html", 
+    #                         num=num
+    #                         )
 
 
 @app.route("/add_to_cart/<int:id>")
@@ -110,15 +126,22 @@ def add_to_cart(id):
     #
     # - add the id of the melon they bought to the cart in the session
 
-    session['cart'] = session.get('cart', [])
+    # session['cart'] = session.get('cart', [])
+
+
+    if 'cart' not in session:
+        session["cart"] = []
+
     session['cart'].append(id)   
+
 
     # raise Exception("add_to_cart 'finished'")
     
-    melon_list = melons.get_all()
-    return render_template("all_melons.html",
-                           melon_list=melon_list)
+    # melon_list = melons.get_all()
+    # return render_template("all_melons.html",
+    #                        melon_list=melon_list)
 
+    return redirect("/cart")
 
 
 @app.route("/login", methods=["GET"])
