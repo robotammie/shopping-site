@@ -7,7 +7,7 @@ Authors: Joel Burton, Christian Fernandez, Meggie Mahnken.
 """
 
 
-from flask import Flask, render_template, redirect, flash
+from flask import Flask, render_template, redirect, flash, session
 import jinja2
 
 import melons
@@ -17,7 +17,7 @@ app = Flask(__name__)
 
 # Need to use Flask sessioning features
 
-app.secret_key = 'this-should-be-something-unguessable'
+app.secret_key = 'something-unguessable'
 
 # Normally, if you refer to an undefined variable in a Jinja template,
 # Jinja silently ignores this. This makes debugging difficult, so we'll
@@ -71,7 +71,18 @@ def shopping_cart():
     #   - keep track of the total amt of the entire order
     # - hand to the template the total order cost and the list of melon types
 
-    return render_template("cart.html")
+    cart = [2, 14, 15, 16, 2, 2, 15]
+
+    session['num_wanted'] = {}
+
+    for melon_id in cart:
+        session['num_wanted'][melon_id] = session['num_wanted'].get(melon_id, [melons.get_by_id(melon_id), 0])
+        session['num_wanted'][melon_id][1] += 1
+
+
+    return render_template("cart.html", 
+                            num=session['num_wanted']
+                            )
 
 
 @app.route("/add_to_cart/<int:id>")
@@ -88,7 +99,12 @@ def add_to_cart(id):
     #
     # - add the id of the melon they bought to the cart in the session
 
-    return "Oops! This needs to be implemented!"
+    session['cart'] = session.get('cart', [])
+    session['cart'].append(id)   
+
+    # return session['cart']
+
+    return [2, 14, 15, 16, 2, 2, 15]
 
 
 @app.route("/login", methods=["GET"])
