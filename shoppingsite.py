@@ -71,14 +71,19 @@ def shopping_cart():
     #   - keep track of the total amt of the entire order
     # - hand to the template the total order cost and the list of melon types
 
+    raise Exception("before list")
+
     cart = [2, 14, 15, 16, 2, 2, 15]
 
     session['num_wanted'] = {}
+
+    # raise Exception("before for loop")
 
     for melon_id in cart:
         session['num_wanted'][melon_id] = session['num_wanted'].get(melon_id, [melons.get_by_id(melon_id), 0])
         session['num_wanted'][melon_id][1] += 1
 
+    # raise Exception("after for loop")
 
     return render_template("cart.html", 
                             num=session['num_wanted']
@@ -102,9 +107,12 @@ def add_to_cart(id):
     session['cart'] = session.get('cart', [])
     session['cart'].append(id)   
 
-    # return session['cart']
+    # raise Exception("add_to_cart 'finished'")
+    
+    melon_list = melons.get_all()
+    return render_template("all_melons.html",
+                           melon_list=melon_list)
 
-    return [2, 14, 15, 16, 2, 2, 15]
 
 
 @app.route("/login", methods=["GET"])
