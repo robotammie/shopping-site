@@ -39,6 +39,8 @@ def list_melons():
     """Return page showing all the melons ubermelon has to offer"""
 
     melon_list = melons.get_all()
+
+    # melon_list is a list of melontype objects
     return render_template("all_melons.html",
                            melon_list=melon_list)
 
@@ -51,7 +53,8 @@ def show_melon(melon_id):
     """
 
     melon = melons.get_by_id(melon_id)
-    print melon
+    
+    # melon is a melontype object
     return render_template("melon_details.html",
                            display_melon=melon)
 
@@ -71,22 +74,25 @@ def shopping_cart():
     #   - keep track of the total amt of the entire order
     # - hand to the template the total order cost and the list of melon types
 
-    raise Exception("before list")
+    # raise Exception("before list")
 
-    cart = [2, 14, 15, 16, 2, 2, 15]
+    cart = session['cart']
 
-    session['num_wanted'] = {}
+    num_wanted = {}
 
     # raise Exception("before for loop")
 
     for melon_id in cart:
-        session['num_wanted'][melon_id] = session['num_wanted'].get(melon_id, [melons.get_by_id(melon_id), 0])
-        session['num_wanted'][melon_id][1] += 1
+        num_wanted[melon_id] = num_wanted.get(melon_id, [melons.get_by_id(melon_id),
+                                                         0])
+        num_wanted[melon_id][1] += 1
 
-    # raise Exception("after for loop")
+    num=num_wanted.items()
+
+    # raise Exception("What are you passing to Cart?")
 
     return render_template("cart.html", 
-                            num=session['num_wanted']
+                            num=num
                             )
 
 
